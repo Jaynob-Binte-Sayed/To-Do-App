@@ -25,17 +25,26 @@ let formValidation = ()=> {
         add.setAttribute("data-bs-dismiss" , "modal");
         add.click();
 
-        
+        (()=>{
+            add.setAttribute("data-bs-dismiss" , ""); 
+        })()
 
     }
 };
 
-let data = {}
+let data = [];
+
 
 let acceptData = ()=> {
-    data["text"] = textInput.value;
-    data["dateInput"] = dateInput.value;
-    data["description"] = textarea.value;
+    data.push({
+        text : textInput.value,
+        dateInput : dateInput.value,
+        description : textarea.value,
+
+    });
+
+    localStorage.setItem("data", JSON.stringify(data)); 
+    console.log(data);
     createTasks();
 }; 
 
@@ -47,8 +56,8 @@ let createTasks = ()=> {
         <p>${data.description}</p>
 
         <span class="options">
-            <i class="fa-solid fa-pen-to-square"></i>
-            <i class="fa-solid fa-trash"></i>
+            <i onClick = "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fa-solid fa-pen-to-square"></i>
+            <i onClick = "deleteTask(this)" class="fa-solid fa-trash"></i>
         </span>
     </div>`;
 
@@ -56,6 +65,23 @@ let createTasks = ()=> {
 
 };
 
+
+let deleteTask = (e)=> {
+    e.parentElement.parentElement.remove();
+
+}
+
+let editTask = (e)=> {
+    let selectedTask = e.parentElement.parentElement;
+
+    textInput.value = selectedTask.children[0].innerHTML
+    dateInput.value = selectedTask.children[1].innerHTML
+    textarea.value = selectedTask.children[2].innerHTML
+
+    selectedTask.remove();
+
+
+}
 
 let resetForm = ()=> {
     textInput.value = "";
