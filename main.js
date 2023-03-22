@@ -37,9 +37,9 @@ let data = [];
 
 let acceptData = ()=> {
     data.push({
-        text : textInput.value,
-        dateInput : dateInput.value,
-        description : textarea.value,
+        text:textInput.value,
+        date:dateInput.value,
+        description:textarea.value,
 
     });
 
@@ -49,17 +49,26 @@ let acceptData = ()=> {
 }; 
 
 let createTasks = ()=> {
-    tasks.innerHTML += `
-    <div>
-        <span class="fw-bold">${data.text}</span>
-        <span class="small text-secondary">${data.date}</span>
-        <p>${data.description}</p>
+    tasks.innerHTML = "";
 
-        <span class="options">
-            <i onClick = "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fa-solid fa-pen-to-square"></i>
-            <i onClick = "deleteTask(this)" class="fa-solid fa-trash"></i>
-        </span>
-    </div>`;
+    data.map((x,y) => {
+        return (tasks.innerHTML += `
+        <div id=${y}>
+            <span class="fw-bold">${x.text}</span>
+            <span class="small text-secondary">${x.date}</span>
+            <p>${x.description}</p>
+    
+            <span class="options">
+                <i onClick = "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fa-solid fa-pen-to-square"></i>
+                <i onClick = "deleteTask(this)" class="fa-solid fa-trash"></i>
+            </span>
+        </div>`
+        )
+
+    })
+
+
+    ;
 
     resetForm();
 
@@ -68,6 +77,9 @@ let createTasks = ()=> {
 
 let deleteTask = (e)=> {
     e.parentElement.parentElement.remove();
+    data.splice(e.parentElement.parentElement.id, 1);
+    localStorage.setItem("data", JSON.stringify(data)); 
+    console.log(data);
 
 }
 
@@ -78,7 +90,7 @@ let editTask = (e)=> {
     dateInput.value = selectedTask.children[1].innerHTML
     textarea.value = selectedTask.children[2].innerHTML
 
-    selectedTask.remove();
+    deleteTask(e);
 
 
 }
@@ -88,3 +100,11 @@ let resetForm = ()=> {
     dateInput.value = "";
     textarea.value = "";
 }
+
+
+(() => {
+    data = JSON.parse(localStorage.getItem("data"));
+    createTasks();
+    console.log(data);
+
+})();
