@@ -60,7 +60,7 @@ let createTasks = ()=> {
     
             <span class="options">
                 <i onClick = "editTask(this)" data-bs-toggle="modal" data-bs-target="#form" class="fa-solid fa-pen-to-square"></i>
-                <i onClick = "deleteTask(this)" class="fa-solid fa-trash"></i>
+                <i onClick = "deleteTask(this);createTasks()" class="fa-solid fa-trash"></i>
             </span>
         </div>`
         )
@@ -103,7 +103,7 @@ let resetForm = ()=> {
 
 
 (() => {
-    data = JSON.parse(localStorage.getItem("data"));
+    data = JSON.parse(localStorage.getItem("data")) || [];
     createTasks();
     console.log(data);
 
